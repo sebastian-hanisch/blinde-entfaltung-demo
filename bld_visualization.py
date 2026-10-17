@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import math
+
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
@@ -15,6 +17,21 @@ def _fixed(fig: go.Figure, height: int = 360, **layout) -> go.Figure:
     fig.update_xaxes(fixedrange=True)
     fig.update_yaxes(fixedrange=True)
     return fig
+
+
+def _ref_line(fig: go.Figure, value: float, line: dict, text: str, position: str, axis: str) -> None:
+    """Referenzlinie mit Beschriftung auf einer logarithmischen Achse: die Linie liegt auf dem Datenwert, die Beschriftung braucht log10 des Werts
+    (add_hline und add_vline setzen beide auf denselben Wert, die Beschriftung sitzt dann falsch und dehnt die Achse)."""
+    if not value > 0.0:
+        return
+    pos = math.log10(value)
+    top, left = "top" in position, "left" in position
+    if axis == "y":
+        fig.add_hline(y=value, line=line)
+        fig.add_annotation(xref="paper", yref="y", x=0 if left else 1, y=pos, text=text, showarrow=False, xanchor="left" if left else "right", yanchor="bottom" if top else "top")
+    else:
+        fig.add_vline(x=value, line=line)
+        fig.add_annotation(xref="x", yref="paper", x=pos, y=1 if top else 0, text=text, showarrow=False, xanchor="right" if left else "left", yanchor="top" if top else "bottom")
 
 
 def build_table(a: Analysis, rows: int = 40) -> pd.DataFrame:
@@ -59,8 +76,8 @@ def build_cost_chart(a: Analysis) -> go.Figure:
     r = list(range(len(a.js)))
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=r, y=a.js, mode="lines+markers", name="J des Verfahrens", line=dict(color=C.COLOR_BLIND, width=3), marker=dict(size=4)))
-    fig.add_hline(y=a.score_true, line=dict(color=C.COLOR_TRUTH, width=2, dash="dash"), annotation_text=f"wahres Paar {sci(a.score_true)}", annotation_position="top left")
-    fig.add_hline(y=a.score_triv, line=dict(color=C.COLOR_TRIVIAL, width=2, dash="dot"), annotation_text=f"Trivialpaar {sci(a.score_triv)}", annotation_position="bottom left")
+    _ref_line(fig, a.score_true, dict(color=C.COLOR_TRUTH, width=2, dash="dash"), f"wahres Paar {sci(a.score_true)}", "top left", "y")
+    _ref_line(fig, a.score_triv, dict(color=C.COLOR_TRIVIAL, width=2, dash="dot"), f"Trivialpaar {sci(a.score_triv)}", "bottom left", "y")
     fig.update_xaxes(title="Runde")
     fig.update_yaxes(title="Zielfunktion J", type="log", exponentformat="power")
     return _fixed(fig, 340)
