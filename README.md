@@ -1,5 +1,7 @@
 # Blinde Entfaltung: Kern und Signal gemeinsam schätzen – Streamlit-Demo
 
+**[→ Demo live ausprobieren](https://sebastianhanisch-blinde-entfaltung-demo.streamlit.app/)**
+
 Zwölftes Stück der Linie **Inverse Probleme und Regularisierung** in der „Konzepte“-Reihe im Portfolio von [Sebastian Hanisch](https://sebastianhanisch.net) (Operations Research und Machine Learning). Es baut auf [aufloesung-messorte-demo](https://github.com/sebastian-hanisch/aufloesung-messorte-demo), [sparsity-tv-demo](https://github.com/sebastian-hanisch/sparsity-tv-demo), [bayes-map-demo](https://github.com/sebastian-hanisch/bayes-map-demo) und [tikhonov-demo](https://github.com/sebastian-hanisch/tikhonov-demo) auf und nutzt dieselbe Welt: ein Phantom aus zwei Hügeln und einem Kasten, gemessen mit einer Gauß-Unschärfe und weißem Rauschen. Neu ist, dass der **Kern unbekannt** ist. Die Wahrheit ist bekannt, weil das Phantom selbst die Wahrheit ist; sie dient hier nur als Maßstab.
 
 ## Kernfrage
